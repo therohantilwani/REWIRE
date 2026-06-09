@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>REWIRE — Dopamine Reset Tracker</title>
+  <meta name="description" content="A 3-week dopamine reset tracker and accountability app grounded in neuroscience.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PLACEHOLDER"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PLACEHOLDER');
+  </script>
+
+  <!-- PostHog Analytics -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([i].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".api.posthog.com","/static/array.js"),(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r),e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_PLACEHOLDER', {api_host:'https://us.i.posthog.com', person_profiles: 'identified_only'});
+  </script>
+</head>
+<body>
+  <!-- Full Screen Wrapper representing the web interface -->
+  <div class="web-layout-container">
+    
+    <!-- Developer Testing Panel (Discreet and Collapsible) -->
+    <div id="dev-panel" class="dev-panel collapsed">
+      <div class="dev-panel-header" id="dev-panel-toggle">
+        <span>Developer Testing Console</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
+      <div class="dev-panel-content">
+        <p class="dev-info">Simulate progression through the 21 days to verify progressive habit unlocking and grid coloring.</p>
+        <div class="dev-row">
+          <label for="dev-day-slider">Fast-forward Day:</label>
+          <div class="slider-container">
+            <input type="range" id="dev-day-slider" min="1" max="22" value="1">
+            <span id="dev-day-display">Day 1</span>
+          </div>
+        </div>
+        <div class="dev-row buttons">
+          <button id="dev-warp-w1" class="btn-secondary btn-xs">Day 1 (W1)</button>
+          <button id="dev-warp-w2" class="btn-secondary btn-xs">Day 8 (W2)</button>
+          <button id="dev-warp-w3" class="btn-secondary btn-xs">Day 15 (W3)</button>
+          <button id="dev-warp-end" class="btn-secondary btn-xs">Day 21 (Done)</button>
+        </div>
+        <div class="dev-row">
+          <button id="dev-reset-all" class="btn-danger btn-xs">Clear Local Data & Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Landing Login Screen (Shown to unauthenticated users) -->
+    <div id="screen-login" class="screen-container active">
+      <div class="login-header-area">
+        <h1 class="logo-text">REWIRE</h1>
+        <p class="logo-tagline">3-Week Dopamine Reset</p>
+      </div>
+
+      <div class="login-card">
+        <p class="login-intro">
+          A structured neurological protocol designed to restore your dopamine receptors and recover your capacity for deep focus.
+        </p>
+
+        <div class="login-benefits">
+          <div class="benefit-row-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="benefit-row-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>Cloud sync across all your devices</span>
+          </div>
+          <div class="benefit-row-item">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="benefit-row-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Intentionally low-stimulation interface</span>
+          </div>
+        </div>
+
+        <button id="btn-google-login" class="btn-primary btn-google">
+          <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Onboarding Flow Screen (Spacious Centered Card) -->
+    <div id="screen-onboarding" class="screen-container">
+      <div class="onboarding-card-wrapper">
+        
+        <!-- Welcome Page -->
+        <div id="onboarding-welcome" class="onboarding-step active">
+          <div class="logo-area">
+            <h1 class="logo-text">REWIRE</h1>
+            <p class="logo-tagline">3-Week Dopamine Reset</p>
+          </div>
+          
+          <div class="intro-card">
+            <p>Modern life is flooded with high-stimulation content. Over time, your brain adapts, reducing its sensitivity to dopamine.</p>
+            <p>When this downregulation happens, everyday activities—reading, hobbies, deep focus—feel boring or flat. You find yourself constantly seeking the next quick hit.</p>
+            <p><strong>REWIRE is a 21-day structured reset protocol based on neuroscience.</strong> By systematically reducing hyper-stimuli, you restore your brain's natural reward baseline.</p>
+          </div>
+
+          <button id="btn-start-assessment" class="btn-primary">Begin Self-Assessment</button>
+        </div>
+
+        <!-- Assessment Page -->
+        <div id="onboarding-assessment" class="onboarding-step">
+          <div class="step-header">
+            <h2 class="section-title">Self-Assessment</h2>
+            <p class="section-desc">Be honest. Answer these questions based on your last 30 days.</p>
+          </div>
+          
+          <div class="questions-list" id="questions-list">
+            <!-- Dynamic assessment questions injected here -->
+          </div>
+
+          <button id="btn-submit-assessment" class="btn-primary" disabled>Calculate Score</button>
+        </div>
+
+        <!-- Results & Neuro Explanation Page -->
+        <div id="onboarding-results" class="onboarding-step">
+          <div class="result-score-container">
+            <span class="score-label">Your Stimulus Score</span>
+            <div class="score-badge">
+              <span id="result-score-num">0</span><span class="score-total">/8</span>
+            </div>
+          </div>
+
+          <!-- Neurological explanation card (only if score > 4) -->
+          <div id="neuro-explanation-card" class="info-card hidden">
+            <h3>What's happening in your brain</h3>
+            <p>Constant high-stimulation content (infinite scroll reels, notifications, short video cycles) floods your brain with dopamine. To protect itself from over-stimulation, your brain downregulates its dopamine receptors—meaning it decreases their sensitivity.</p>
+            <p>This shifts your baseline. Normal, slower activities (like reading, deep work, or face-to-face conversation) don't trigger enough reward prediction error to feel interesting anymore. They feel under-stimulating and flat.</p>
+            <p>By undergoing a 3-week reset, you allow your dopamine receptors to recover their sensitivity, lowering your stimulation threshold so you can enjoy everyday activities again.</p>
+          </div>
+
+          <!-- Normal score explanation card (only if score <= 4) -->
+          <div id="normal-explanation-card" class="info-card hidden">
+            <h3>Your baseline is relatively stable</h3>
+            <p>Your habits show a balanced relationship with high-stimulation content. However, undertaking a structured 21-day reset can still act as an excellent cognitive maintenance protocol, clearing out digital clutter and enhancing your capacity for deep focus, reading, and intentional connection.</p>
+          </div>
+
+          <div class="tally-box">
+            <p class="tally-text">Want scientific weekly calibration tips to support your reset?</p>
+            <a href="https://tally.so/r/n0calm" target="_blank" class="btn-secondary btn-sm tally-btn">Get Reset Newsletter</a>
+          </div>
+
+          <button id="btn-proceed-date" class="btn-primary">Set Start Date</button>
+        </div>
+
+        <!-- Start Date Page -->
+        <div id="onboarding-date" class="onboarding-step">
+          <div class="step-header">
+            <h2 class="section-title">Set Your Start Date</h2>
+            <p class="section-desc">Choose when your 21-day reset protocol officially begins.</p>
+          </div>
+
+          <div class="date-selector-container">
+            <label for="input-start-date" class="date-label">Start Date</label>
+            <input type="date" id="input-start-date" class="input-date">
+            <p class="date-helper">We recommend starting today or tomorrow to build immediate momentum.</p>
+          </div>
+
+          <button id="btn-complete-onboarding" class="btn-primary">Start the Protocol</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Application Interface (Hidden initially) -->
+    <div id="screen-main-app" class="screen-container">
+      
+      <!-- Left Navigation Sidebar (Visible on Desktop) -->
+      <aside class="app-sidebar">
+        <div class="sidebar-brand">
+          <span class="sidebar-logo">REWIRE</span>
+          <span id="sidebar-day-badge" class="badge-week1">Day 1 of 21</span>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button class="nav-tab active" data-view="view-daily">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span class="nav-label">Daily Tracker</span>
+          </button>
+          <button class="nav-tab" data-view="view-progress">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+            <span class="nav-label">Progress Map</span>
+          </button>
+          <button class="nav-tab" data-view="view-journal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span class="nav-label">Journal Feed</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button id="btn-theme-toggle-sidebar" class="btn-theme-sidebar btn-secondary btn-xs" aria-label="Toggle dark mode">
+            <span>Toggle Theme</span>
+          </button>
+          <button id="btn-signout-sidebar" class="btn-danger btn-xs" style="width: 100%;">
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Right Main Content Area -->
+      <div class="app-main-content">
+        
+        <!-- App Header (Visible on Mobile only) -->
+        <header class="app-header">
+          <div class="header-left">
+            <span class="header-logo">REWIRE</span>
+            <span id="current-day-badge" class="badge-week1">Day 1 of 21</span>
+          </div>
+          <div class="header-right">
+            <!-- Sign Out Button -->
+            <button id="btn-signout" class="btn-icon" aria-label="Sign out" title="Sign out" style="margin-right: 4px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="signout-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+            <!-- Dark Mode Toggle Button -->
+            <button id="btn-theme-toggle" class="btn-icon" aria-label="Toggle dark mode">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-dark"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-light"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Views Wrapper (Dashboard center grid) -->
+        <div class="views-wrapper">
+          
+          <!-- View 1: Daily Check-in -->
+          <section id="view-daily" class="app-view active">
+            <div class="view-header">
+              <h2 id="weekly-theme-title" class="theme-title">Subtract</h2>
+              <p id="weekly-theme-desc" class="theme-desc">Eliminating core high-stimulation triggers.</p>
+            </div>
+
+            <div class="dashboard-grid">
+              <!-- Left Column: Habits -->
+              <div class="dashboard-column main-card">
+                <div class="habits-section">
+                  <h3 class="subsection-title">Today's Habits</h3>
+                  <div class="habits-list" id="habits-checkbox-list">
+                    <!-- Dynamically populated habits check-list -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Note & Streak -->
+              <div class="dashboard-column side-card">
+                <div class="note-section">
+                  <label for="input-daily-note" class="subsection-title-label">
+                    <span>What felt different today?</span>
+                    <span class="note-char-hint">Optional • One sentence</span>
+                  </label>
+                  <input type="text" id="input-daily-note" placeholder="E.g., Felt less restless around 3 PM, read a book instead..." maxlength="120" class="input-note">
+                  <span id="note-save-indicator" class="save-indicator">Saved automatically</span>
+                </div>
+
+                <div class="streak-section">
+                  <h3 class="subsection-title">Last 7 Days</h3>
+                  <div class="streak-indicator-container" id="streak-circles-container">
+                    <!-- Streak dots injected here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- View 2: Progress Grid & Stats -->
+          <section id="view-progress" class="app-view">
+            <div class="view-header">
+              <h2 class="view-title">Your Protocol</h2>
+              <p class="view-desc">21 days of dopamine downregulation.</p>
+            </div>
+
+            <div class="dashboard-grid">
+              <!-- Left Column: 21-Day Grid Map -->
+              <div class="dashboard-column main-card">
+                <div class="progress-grid-container">
+                  <h3 class="subsection-title">Reset Grid Map</h3>
+                  <div class="progress-grid" id="progress-grid-map">
+                    <!-- 21 cells injected here -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Stats & Advisor -->
+              <div class="dashboard-column side-card">
+                <div class="stats-dashboard">
+                  <div class="stat-card">
+                    <span class="stat-value" id="stat-days-in">0</span>
+                    <span class="stat-label">Days In</span>
+                  </div>
+                  <div class="stat-card">
+                    <span class="stat-value" id="stat-current-streak">0</span>
+                    <span class="stat-label">Current Streak</span>
+                  </div>
+                  <div class="stat-card">
+                    <span class="stat-value" id="stat-habits-checked">0/3</span>
+                    <span class="stat-label">Habits Today</span>
+                  </div>
+                  <div class="stat-card">
+                    <span class="stat-value" id="stat-starting-score">0</span>
+                    <span class="stat-label">Starting Score</span>
+                  </div>
+                </div>
+
+                <!-- AI Neuro Advisor Card -->
+                <div class="advisor-card">
+                  <div class="advisor-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="advisor-icon"><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"></path><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                    <span>Neuro-Linguistic Advisor</span>
+                  </div>
+                  <div class="advisor-content">
+                    <p id="advisor-text">Receive direct, psychological calibration based on your current day and progress streak.</p>
+                    <button id="btn-advisor-checkin" class="btn-secondary">Request Check-in</button>
+                  </div>
+                </div>
+
+                <!-- Re-assessment / Comparison area (unlocked after Day 21) -->
+                <div id="re-score-container" class="re-score-container locked">
+                  <div class="re-score-banner">
+                    <h3>Reset Protocol Completed</h3>
+                    <p>You have completed the full 21 days. Measure your neurological baseline shift now.</p>
+                    <button id="btn-start-reassessment" class="btn-primary btn-sm">Retake Assessment</button>
+                  </div>
+                </div>
+
+                <!-- Re-assessment Results overlay/display (if completed) -->
+                <div id="re-score-comparison" class="re-score-comparison-card hidden">
+                  <h3>Baseline Score Shift</h3>
+                  <div class="comparison-row">
+                    <div class="comparison-column">
+                      <span class="comparison-label">Starting Score</span>
+                      <span class="comparison-value" id="compare-start-val">6/8</span>
+                    </div>
+                    <div class="comparison-column arrow">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="arrow-right-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                    <div class="comparison-column">
+                      <span class="comparison-label">Ending Score</span>
+                      <span class="comparison-value" id="compare-end-val">2/8</span>
+                    </div>
+                  </div>
+                  <p id="comparison-analysis" class="comparison-analysis-text"></p>
+                  <button id="btn-reset-protocol-restart" class="btn-secondary btn-xs">Reset Application Data</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- View 3: Reflections & Journal Feed -->
+          <section id="view-journal" class="app-view">
+            <div class="view-header">
+              <h2 class="view-title">Reflections</h2>
+              <p class="view-desc">Documenting internal neurological shifts.</p>
+            </div>
+
+            <div class="dashboard-grid">
+              <!-- Left Column: New Entry -->
+              <div class="dashboard-column side-card">
+                <div class="new-entry-card">
+                  <div class="entry-header">
+                    <span class="entry-label">Write Journal Entry</span>
+                    <div class="tag-selector">
+                      <button id="tag-journal" class="btn-tag active" data-tag="journal">Journal</button>
+                      <button id="tag-note" class="btn-tag" data-tag="note">Note</button>
+                    </div>
+                  </div>
+                  <textarea id="input-journal-text" placeholder="Write freely about today's focus levels, cravings, boredom threshold, or physical feelings..." class="input-journal-textarea"></textarea>
+                  <button id="btn-save-journal" class="btn-primary btn-sm">Save Entry</button>
+                </div>
+              </div>
+
+              <!-- Right Column: Timeline Feed -->
+              <div class="dashboard-column main-card">
+                <div class="journal-feed-section">
+                  <h3 class="subsection-title">Timeline</h3>
+                  <div class="journal-timeline" id="journal-timeline-list">
+                    <!-- Chronological list of notes & journal entries -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+        </div>
+
+        <!-- Bottom Navigation Tab Bar (Visible on Mobile only) -->
+        <nav class="app-nav">
+          <button class="nav-tab active" data-view="view-daily">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span class="nav-label">Daily</span>
+          </button>
+          <button class="nav-tab" data-view="view-progress">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line></svg>
+            <span class="nav-label">Progress</span>
+          </button>
+          <button class="nav-tab" data-view="view-journal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span class="nav-label">Journal</span>
+          </button>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Re-assessment Modal -->
+  <div id="modal-reassessment" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>End of Reset Re-Assessment</h2>
+        <button id="btn-close-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Take the baseline check again to measure receptor adaptation over the last 21 days.</p>
+        <div class="questions-list" id="reassessment-questions-list">
+          <!-- Reassessment questions injected dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-submit-reassessment" class="btn-primary" disabled>Compare Scores</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Javascript -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
