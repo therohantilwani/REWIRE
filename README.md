@@ -70,95 +70,21 @@ All data — start date, initial score, daily habit checks, and journal entries 
 
 ---
 
-## Tech stack
+## Privacy & Data Security
 
-| Layer | Tech |
-|---|---|
-| Frontend | React / HTML + CSS |
-| Storage | localStorage → Supabase (free tier) |
-| Analytics | PostHog (free tier) |
-| Email capture | Brevo |
-| AI check-in | Anthropic Claude API (claude-haiku) |
-| Hosting | Vercel |
+Your privacy is paramount. **REWIRE** is built to help you reset your habits without exploiting your attention:
 
----
-
-## Screens
-
-```
-Onboarding         Today              Progress           Reflect
-──────────         ─────              ────────           ───────
-Self-assessment    Day X of 21        21-day grid        Journal entry
-Score out of 8     Week theme badge   Streak stats       Past entries
-Start CTA          Habit checklist    Re-score button    Tagged by type
-                   Quick note field   AI check-in
-```
-
----
-
-## Roadmap
-
-- [x] Core habit tracker (3-week protocol)
-- [x] Self-assessment with score
-- [x] Streak and 21-day progress map
-- [x] Reflection journal
-- [x] AI check-in
-- [ ] Push notifications (day streak reminders)
-- [ ] Cross-device sync via Supabase
-- [ ] Re-score comparison after day 21
-- [ ] iOS app (post web PoC validation)
-- [ ] Android app
-- [ ] Paid unlock — journal history export, extended protocol, AI daily summary
-
----
-
-## Getting started
-
-```bash
-git clone https://github.com/yourusername/rewire
-cd rewire
-npm install
-npm run dev
-```
-
-Open `http://localhost:3000` and go through the assessment to begin your reset.
-
----
-
-## Environment variables
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-ANTHROPIC_API_KEY=your_anthropic_key
-```
-
----
-
-## Monetization
-
-Rewire is free to start. A one-time unlock (~$3.99) will gate:
-
-- Journal history export
-- AI daily summary
-- Extended 30-day protocol
-- Cross-device sync
-
-No subscription. No ads. The whole point of this app is to reduce compulsive behavior — it would be hypocritical to monetize attention.
+* **Secure Storage**: All your data (daily checks, notes, journals) is stored securely in your private cloud account via Supabase, ensuring your progress is persisted safely and remains accessible across your devices.
+* **No Attention Economy Tactics**: No ads, no compulsive gamification, and no notification spam. 
+* **Analytics**: We use lightweight privacy-conscious analytics (PostHog & Google Analytics) to check overall application traffic and ensure features work smoothly.
 
 ---
 
 ## Background
 
-Built by [Rohan](https://github.com/yourusername) — MS Computer Science (University of the Pacific, 2026), NLP + cybersecurity researcher. This app came out of a personal frustration: I knew exactly what the problem was, I'd read the science, and I still couldn't find a tool that took it seriously without being another gamified dopamine trap itself.
+Built by [Rohan](https://github.com/therohantilwani) — MS Computer Science (University of the Pacific, 2026), NLP + cybersecurity researcher. This app came out of personal frustration: I knew exactly what the problem was, I'd read the science, and I still couldn't find a tool that took it seriously without being another gamified dopamine trap itself.
 
-The neuroscience behind this app is real. Reward prediction error, dopamine downregulation, and the wanting vs. liking distinction are well-established — not wellness content. The protocol is based on multiple research papers on addiction recovery and behavioral psychology.
-
----
-
-## Contributing
-
-This is an early-stage PoC. If you try the 21-day protocol and have feedback, open an issue or reach out directly. Feature requests welcome — especially around what would make you actually stick to it.
+The neuroscience behind this app is real. Reward prediction error, dopamine downregulation, and the wanting vs. liking distinction are well-established concepts — not "wellness" buzzwords. The 21-day protocol is designed based on research in addiction recovery and behavioral psychology to help you rebuild focus.
 
 ---
 
