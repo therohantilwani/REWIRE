@@ -1019,10 +1019,26 @@ function initTheme() {
   });
 }
 
+// Sync dev slider state safely
+function syncDevSlider() {
+  const slider = document.getElementById("dev-day-slider");
+  const display = document.getElementById("dev-day-display");
+  const currentDay = state.devDayOffset + 1;
+  if (slider) slider.value = currentDay;
+  if (display) display.textContent = `Day ${currentDay}`;
+}
+
 // Developer Testing Panel
 function setupDevPanel() {
-  const toggle = document.getElementById("dev-panel-toggle");
   const panel = document.getElementById("dev-panel");
+  const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  
+  if (!isDev) {
+    if (panel) panel.remove();
+    return;
+  }
+
+  const toggle = document.getElementById("dev-panel-toggle");
   const slider = document.getElementById("dev-day-slider");
   const display = document.getElementById("dev-day-display");
   
@@ -1060,11 +1076,6 @@ function setupDevPanel() {
 }
 
 function setDevDay(dayNum) {
-  const slider = document.getElementById("dev-day-slider");
-  const display = document.getElementById("dev-day-display");
-  
-  slider.value = dayNum;
-  display.textContent = `Day ${dayNum}`;
   state.devDayOffset = dayNum - 1;
   
   if (!supabase) {
@@ -1073,6 +1084,7 @@ function setDevDay(dayNum) {
   
   renderActiveView();
   updateDayBadges(dayNum);
+  syncDevSlider();
 }
 
 // Autosave handler for quick daily note
@@ -1137,9 +1149,7 @@ window.onload = () => {
         syncAppView();
         
         // Sync dev slider
-        const currentDay = state.devDayOffset + 1;
-        document.getElementById("dev-day-slider").value = currentDay;
-        document.getElementById("dev-day-display").textContent = `Day ${currentDay}`;
+        syncDevSlider();
       } else {
         state.user = null;
         clearLocalState();
@@ -1155,9 +1165,7 @@ window.onload = () => {
       loadUserData().then(() => {
         syncAppView();
         
-        const currentDay = state.devDayOffset + 1;
-        document.getElementById("dev-day-slider").value = currentDay;
-        document.getElementById("dev-day-display").textContent = `Day ${currentDay}`;
+        syncDevSlider();
       });
     } else {
       syncAppView();
